@@ -122,57 +122,70 @@ flowchart TB
     H["Квитанция об оплате"] --> F
     I["Рецепт"] --> A
 ```
+Диаграмма классов
 ```mermaid
 classDiagram
-    class Patient {
-        +UUID id
-        +String fullName
-        +Date birthDate
-        +String phone
-        +String email
+    class Пациент {
+        +id: UUID
+        +ФИО: string
+        +датаРождения: date
+        +email: string
+        +телефон: string
     }
 
-    class Doctor {
-        +UUID id
-        +String fullName
-        +String specialization
-        +String licenseNumber
+    class Врач {
+        +id: UUID
+        +ФИО: string
+        +специальность: string
+        +стаж: int
     }
 
-    class Appointment {
-        +UUID id
-        +DateTime dateTime
-        +String status
+    class МедицинскаяКарта {
+        +id: UUID
+        +диагнозы: List
+        +назначения: List
+        +результатыАнализов: List
     }
 
-    class MedicalRecord {
-        +UUID id
-        +Date createdAt
-        +String diagnosis
-        +String notes
+    class Прием {
+        +id: UUID
+        +датаВремя: datetime
+        +статус: string
+        +типПриема: string
     }
 
-    class Prescription {
-        +UUID id
-        +String medication
-        +String dosage
-        +String duration
+    class Назначение {
+        +id: UUID
+        +описание: string
+        +датаНазначения: date
     }
 
-    class Payment {
-        +UUID id
-        +Decimal amount
-        +String status
-        +DateTime paidAt
+    class Платеж {
+        +id: UUID
+        +сумма: float
+        +статус: string
+        +датаОплаты: datetime
     }
 
-    Patient "1" --> "0..*" Appointment : books
-    Doctor "1" --> "0..*" Appointment : conducts
+    class МедицинскоеУстройство {
+        +id: UUID
+        +тип: string
+        +производитель: string
+    }
 
-    Patient "1" --> "0..*" MedicalRecord
-    MedicalRecord "1" --> "0..*" Prescription
+    class ПоказательЗдоровья {
+        +тип: string
+        +значение: float
+        +датаИзмерения: datetime
+    }
 
-    Appointment "1" --> "0..1" Payment
+    Пациент "1" --> "1" МедицинскаяКарта : имеет
+    Пациент "1" --> "*" Прием : записывается
+    Врач "1" --> "*" Прием : проводит
+    Прием "1" --> "*" Назначение : включает
+    Пациент "1" --> "*" Платеж : оплачивает
+    МедицинскоеУстройство "1" --> "*" ПоказательЗдоровья : фиксирует
+    Пациент "1" --> "*" ПоказательЗдоровья : получает
 ```
 
 Диаграмма контекста (C4)
